@@ -1,0 +1,19 @@
+services:
+  kotlin:
+    container_name: kotlin
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kmp-alpine
+    working_dir: /workspace
+
+    volumes:
+      # Project files
+      - .:/workspace
+
+    environment:
+      GRADLE_USER_HOME: /workspace/.gradleCache
+    user: "1000:100" # CHANGE FOR YOUR USER
+    stdin_open: true
+    tty: true
+    # command: tail -f /dev/null
