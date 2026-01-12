@@ -7,7 +7,27 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class LibraryTest {
-    @Test fun someLibraryMethodReturnsTrue() {
-        assertEquals(Telex.telexToVietnamese("muawj"), "mựa")
+    fun testList(testData: List<Pair<String, String>>) {
+        for (item in testData) {
+            assertEquals(item.second, Telex.telexToVietnamese(item.first),
+            message = "Failed test case: <${item.first}>")
+        }
+    }
+
+    @Test fun initalTest() {
+        val testData = listOf(
+            Pair("ddi", "đi"),
+            Pair("did", "đi"),
+            Pair("Did", "Đi"),
+            Pair("daxd", "đã"),
+            Pair("dadx", "đã"),
+            Pair("dadng", "đang"),
+            Pair("dandg", "đang")
+        )
+
+        // for (item in testData) {
+        //     assertEquals(Telex.telexToVietnamese(item.first), item.second)
+        // }
+        testList(testData)
     }
 }
