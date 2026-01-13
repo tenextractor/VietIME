@@ -4,5 +4,5 @@ Many thanks to the [vi-rs](https://github.com/ZeroX-DG/vi-rs) team, whose projec
 
 # How to test
 * `lib/src/test/kotlin/com/tenextractor/vietime/LibraryTest.kt` contains test cases
-* Install JDK 21: https://adoptium.net/installation#installers
+* Install JDK 21. If your package manager does not have it, get it from https://adoptium.net/installation#installers
 * Run `./gradlew test` in a terminal
