@@ -151,7 +151,11 @@ object Telex {
                         continue
                     }
 
-                    if (wIndices.size == 1 && lowercaseCh == 'o') {
+                    if (wIndices.size == 1 && lowercaseCh == 'o'
+                    && lowercaseInput.getOrNull(index + 1) != 'a'
+                    // add edge case for "oaw" (should output "oă", not "ơă" or "ơa")
+                    ) {
+
                         output.append(Maps.HORN_MAP[ch])
                         vowelCount++
                         continue
