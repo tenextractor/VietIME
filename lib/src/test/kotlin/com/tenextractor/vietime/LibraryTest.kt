@@ -24,10 +24,7 @@ class LibraryTest {
             Pair("dadng", "đang"),
             Pair("dandg", "đang")
         )
-
-        // for (item in testData) {
-        //     assertEquals(Telex.telexToVietnamese(item.first), item.second)
-        // }
+        
         testList(testData)
     }
 }
