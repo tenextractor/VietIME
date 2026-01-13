@@ -139,8 +139,9 @@ class LibraryTest {
             Pair("ngoaij", "ngoại"),
             Pair("xoays", "xoáy"),
             Pair("loay", "loay"),
-            //Pair("ngoeo", "ngoeo"),
-            //Pair("ngoeof", "ngoèo"),
+            Pair("ngoeo", "ngoeo"),
+            Pair("ngoeof", "ngoèo"),
+            Pair("ngoefo", "ngoèo"),
             Pair("khuaays", "khuấy"),
             Pair("nguaayr", "nguẩy"),
             Pair("chuoois", "chuối"),
@@ -161,7 +162,7 @@ class LibraryTest {
     @Test fun miscTest() {
         val testData = listOf(
             Pair("ho", "ho"),
-            //Pair("hosawt", "hoắt")
+            Pair("hosawt", "hoắt")
         )
 
         testList(testData)

@@ -24,6 +24,21 @@ object Telex {
      */
     val AFTER_VOWEL_MODIFIERS = setOf('f', 'j', 'r', 's', 'w', 'x')
 
+    // TODO: "lookahead" function that ignores tones to fix the "ngoeo" issue
+    fun matchWithoutTones(lowercaseInput: String, startIndex: Int, match: String): Boolean {
+        // If the rest of lowercaseInput is shorter than the string to be matched, just return false
+        if (lowercaseInput.length - startIndex < match.length) return false
+
+        var inputIndex = startIndex
+        for (ch in match) {
+            while (inputIndex < lowercaseInput.length && TONES.containsKey(lowercaseInput[inputIndex]))
+                inputIndex++
+            if (inputIndex == lowercaseInput.length) return false
+            if (ch != lowercaseInput[inputIndex]) return false
+            inputIndex++
+        }
+        return true
+    }
 
     /** Convert a string that represents a Vietnamese syllable written in the Telex convention ([input])
      * to a syllable written in Vietnamese orthography.
@@ -133,6 +148,11 @@ object Telex {
                     if (thisModifierIndices.size == 2 && index == thisModifierIndices[0]) {
                         if (lowercaseCh == 'd') {
                             output.append(Maps.STROKE_MAP[ch])
+                        } else if (lowercaseCh == 'o' && matchWithoutTones(lowercaseInput, index, "oeo")) {
+                            // handle "oeo" edge case (should output "oeo", not "ôe"):
+                            // remove the second 'o''s index from modifierIndices so that it will be outputted
+                            modifierIndices['o']!!.removeLast()
+                            output.append(ch)
                         } else {
                             output.append(Maps.CIRCUMFLEX_MAP[ch])
                             vowelCount++
@@ -152,10 +172,9 @@ object Telex {
                     }
 
                     if (wIndices.size == 1 && lowercaseCh == 'o'
-                    && lowercaseInput.getOrNull(index + 1) != 'a'
+                    && !matchWithoutTones(lowercaseInput, index, "oa")
                     // add edge case for "oaw" (should output "oă", not "ơă" or "ơa")
                     ) {
-
                         output.append(Maps.HORN_MAP[ch])
                         vowelCount++
                         continue
