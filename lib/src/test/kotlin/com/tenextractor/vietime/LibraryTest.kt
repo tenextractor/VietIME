@@ -112,9 +112,9 @@ class LibraryTest {
             Pair("muxi", "mũi"),
             Pair("huyr", "huỷ"),
             Pair("tuys", "tuý"),
-            //Pair("huow", "huơ"),
+            Pair("huow", "huơ"),
             Pair("quow", "quơ"),
-            //Pair("thuowr", "thuở"),
+            Pair("thuowr", "thuở"),
             Pair("nuowcs", "nước"),
             Pair("muopws", "mướp"),
             Pair("huouw", "hươu"),
@@ -167,4 +167,28 @@ class LibraryTest {
 
         testList(testData)
     }
+
+    @Test fun vowelModifierTest() {
+        val testData = listOf(
+            Pair("uow", "ươ"),
+            Pair("uwow", "ươ"), 
+            Pair("uocws", "ước"),
+            Pair("duow", "dươ"),
+            Pair("duowf", "dườ"), 
+            Pair("thuowf", "thuờ"),
+            Pair("thuawf", "thừa"),
+            Pair("thuongwf", "thường"),
+            Pair("quonw","quơn"),
+            Pair("quown","quơn"),
+            Pair("khuow","khươ"), 
+            Pair("luow","lươ"), 
+            Pair("cuow","cươ"), 
+            Pair("truow","trươ"), 
+            Pair("luaw","lưa"),
+            Pair("luawr","lửa")
+        )
+
+        testList(testData)
+    }
+
 }
