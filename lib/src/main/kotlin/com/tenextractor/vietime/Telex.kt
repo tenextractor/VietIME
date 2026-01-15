@@ -201,7 +201,27 @@ object Telex {
                         }
                     }
 
-                    if (modifierIndices['w']!!.size == 1 && !wHasBeenUsed && !(lowercaseInput[0] == 'q' && index == 1)) {
+                    // Check if this is a simple "uo" pattern (only one 'w' modifier and no others)
+                    // This only applies for certain initials (h, th, q)
+                    // For example: "huow" -> "huơ" (isSimpleUow=true), but "uow" -> "ươ" (isSimpleUow=false)
+                    var isSimpleUow = false
+                    val initial = lowercaseInput.substring(0, firstVowelIndex)
+                    if ((initial == "h" || initial == "th" || initial == "q") && modifierIndices['w']!!.size == 1 && index + 1 < lowercaseInput.length && lowercaseInput[index+1] == 'o') {
+                         isSimpleUow = true
+                         // Scan for other modifiers; if found, it's not simple
+                         for (k in firstVowelIndex until lowercaseInput.length) {
+                             if (k == index || k == index + 1) continue
+
+                             val c = lowercaseInput[k]
+                             if (MODIFIERS.contains(c) && modifierIndices.containsKey(c) && modifierIndices[c]!!.contains(k)) {
+                                 continue
+                             }
+                             isSimpleUow = false
+                             break
+                         }
+                    }
+
+                    if (modifierIndices['w']!!.size == 1 && !wHasBeenUsed && !(lowercaseInput[0] == 'q' && index == 1) && !isSimpleUow) {
                         output.append(Maps.HORN_MAP[ch])
                         vowelCount++
                         wHasBeenUsed = true
