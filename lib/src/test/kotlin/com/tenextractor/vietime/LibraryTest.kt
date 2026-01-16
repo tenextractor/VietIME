@@ -13,6 +13,24 @@ class LibraryTest {
         }
     }
 
+    fun readCsv(resourceFileName: String): List<Pair<String, String>> {
+        val testData = javaClass.getResource("/${resourceFileName}")!!
+            .readText()
+            .lineSequence()
+            .filter { it.isNotBlank() && !it.trimStart().startsWith("#") }
+            .map { line ->
+                val (input, expected) = line.split(',', limit = 2)
+                Pair(input.trim(), expected.trim())
+            }
+            .toList()
+
+        return testData
+    }
+
+    fun testCsv(resourceFileName: String) {
+        testList(readCsv(resourceFileName))
+    }
+
     @Test fun initalTest() {
         val testData = listOf(
             Pair("ddi", "đi"),
@@ -191,4 +209,7 @@ class LibraryTest {
         testList(testData)
     }
 
+    @Test fun allSyllablesTest() {
+        testCsv("all_telex_syllables.csv")
+    }
 }
