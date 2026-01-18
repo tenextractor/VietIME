@@ -57,6 +57,8 @@ object Telex {
         var startedFinal = false
         var firstVowelIndex = -1
 
+        val lowercaseVowel = StringBuilder()
+
         /** Map of 'modifier' characters that can add a diacritic or tone mark,
          * to lists of indices of occurrences of these characters
          * (also includes 'u', which is not a modifier, but is rather modified by 'w' to become 'ư')
@@ -92,10 +94,13 @@ object Telex {
                 }
             }
 
-            // if (!startedFinal) {
-            //     if (startedVowel && CONSONANTS.contains(ch) && !MODIFIERS.contains(ch))
-            //         startedFinal = true
-            // }
+            if (startedVowel && !startedFinal) {
+                if (!AFTER_VOWEL_MODIFIERS.contains(ch))
+                    lowercaseVowel.append(ch)
+
+                if (startedVowel && CONSONANTS.contains(ch) && !MODIFIERS.contains(ch))
+                    startedFinal = true
+            }
 
             if (AFTER_VOWEL_MODIFIERS.contains(ch)) {
                 if (startedVowel) modifierIndices[ch]!!.add(index)
@@ -111,6 +116,10 @@ object Telex {
         // and therefore the firstVowelIndex needs to be corrected to account for this
         if (modifierIndices['d']!!.size > 1 && modifierIndices['d']!!.last() < firstVowelIndex)
             firstVowelIndex--
+        
+        // apply correction to lowercaseVowel
+        if (lowercaseVowel.length > 1 && (lowercaseInput.slice(0..<2) == "gi" || lowercaseInput.slice(0..<2) == "qu"))
+            lowercaseVowel.deleteAt(0)
 
 
         // STAGE 2: use modifierIndices to apply diacritics (except tone marks) to the syllable
@@ -174,8 +183,10 @@ object Telex {
                     if (wIndices.size == 1 && lowercaseCh == 'o'
                     && !matchWithoutTones(lowercaseInput, index, "oa")
                     // add edge case for "oaw" (should output "oă", not "ơă" or "ơa")
+                    && !(firstVowelIndex != 0 && lowercaseVowel.contentEquals("ou"))
                     ) {
                         output.append(Maps.HORN_MAP[ch])
+                        wHasBeenUsed = true
                         vowelCount++
                         continue
                     }
