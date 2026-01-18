@@ -212,27 +212,20 @@ object Telex {
                         }
                     }
 
-                    // Check if this is a simple "uo" pattern (only one 'w' modifier and no others)
-                    // This only applies for certain initials (h, th, q)
+                    // Check if "uo" with modifier 'w' should output "uơ" instead of "ươ"
+                    // This only applies when:
+                    // * The initial is h, th, or qu (already handled by blocking qu > qư)
+                    // * The vowel is only "uo", nothing else
+                    // * There is no final consonant
                     // For example: "huow" -> "huơ" (isSimpleUow=true), but "uow" -> "ươ" (isSimpleUow=false)
-                    var isSimpleUow = false
+                    var uowIsNotUwow = false
                     val initial = lowercaseInput.substring(0, firstVowelIndex)
-                    if ((initial == "h" || initial == "th" || initial == "q") && modifierIndices['w']!!.size == 1 && index + 1 < lowercaseInput.length && lowercaseInput[index+1] == 'o') {
-                         isSimpleUow = true
-                         // Scan for other modifiers; if found, it's not simple
-                         for (k in firstVowelIndex until lowercaseInput.length) {
-                             if (k == index || k == index + 1) continue
-
-                             val c = lowercaseInput[k]
-                             if (MODIFIERS.contains(c) && modifierIndices.containsKey(c) && modifierIndices[c]!!.contains(k)) {
-                                 continue
-                             }
-                             isSimpleUow = false
-                             break
-                         }
+                    if ((initial == "h" || initial == "th") && !startedFinal
+                        && modifierIndices['w']!!.size == 1 && lowercaseVowel.contentEquals("uo")) {
+                         uowIsNotUwow = true
                     }
 
-                    if (modifierIndices['w']!!.size == 1 && !wHasBeenUsed && !(lowercaseInput[0] == 'q' && index == 1) && !isSimpleUow) {
+                    if (modifierIndices['w']!!.size == 1 && !wHasBeenUsed && !(lowercaseInput[0] == 'q' && index == 1) && !uowIsNotUwow) {
                         output.append(Maps.HORN_MAP[ch])
                         vowelCount++
                         wHasBeenUsed = true
