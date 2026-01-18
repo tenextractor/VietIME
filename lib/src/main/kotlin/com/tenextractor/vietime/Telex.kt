@@ -24,22 +24,6 @@ object Telex {
      */
     val AFTER_VOWEL_MODIFIERS = setOf('f', 'j', 'r', 's', 'w', 'x')
 
-    // TODO: "lookahead" function that ignores tones to fix the "ngoeo" issue
-    fun matchWithoutTones(lowercaseInput: String, startIndex: Int, match: String): Boolean {
-        // If the rest of lowercaseInput is shorter than the string to be matched, just return false
-        if (lowercaseInput.length - startIndex < match.length) return false
-
-        var inputIndex = startIndex
-        for (ch in match) {
-            while (inputIndex < lowercaseInput.length && TONES.containsKey(lowercaseInput[inputIndex]))
-                inputIndex++
-            if (inputIndex == lowercaseInput.length) return false
-            if (ch != lowercaseInput[inputIndex]) return false
-            inputIndex++
-        }
-        return true
-    }
-
     /** Convert a string that represents a Vietnamese syllable written in the Telex convention ([input])
      * to a syllable written in Vietnamese orthography.
      * Example: input = "vietej", output = "việt"
@@ -61,7 +45,6 @@ object Telex {
 
         /** Map of 'modifier' characters that can add a diacritic or tone mark,
          * to lists of indices of occurrences of these characters
-         * (also includes 'u', which is not a modifier, but is rather modified by 'w' to become 'ư')
          */
         val modifierIndices: Map<Char, MutableList<Int>> = mapOf(
             'a' to mutableListOf(),
@@ -72,7 +55,6 @@ object Telex {
             'o' to mutableListOf(),
             'r' to mutableListOf(),
             's' to mutableListOf(),
-            'u' to mutableListOf(),
             'w' to mutableListOf(),
             'x' to mutableListOf(),
         )
@@ -95,11 +77,11 @@ object Telex {
             }
 
             if (startedVowel && !startedFinal) {
-                if (!AFTER_VOWEL_MODIFIERS.contains(ch))
-                    lowercaseVowel.append(ch)
-
-                if (startedVowel && CONSONANTS.contains(ch) && !MODIFIERS.contains(ch))
+                if (CONSONANTS.contains(ch) && !MODIFIERS.contains(ch)) {
                     startedFinal = true
+                } else if (!AFTER_VOWEL_MODIFIERS.contains(ch)) {
+                    lowercaseVowel.append(ch)
+                }
             }
 
             if (AFTER_VOWEL_MODIFIERS.contains(ch)) {
@@ -157,7 +139,7 @@ object Telex {
                     if (thisModifierIndices.size == 2 && index == thisModifierIndices[0]) {
                         if (lowercaseCh == 'd') {
                             output.append(Maps.STROKE_MAP[ch])
-                        } else if (lowercaseCh == 'o' && matchWithoutTones(lowercaseInput, index, "oeo")) {
+                        } else if (lowercaseCh == 'o' && lowercaseVowel.contentEquals("oeo")) {
                             // handle "oeo" edge case (should output "oeo", not "ôe"):
                             // remove the second 'o''s index from modifierIndices so that it will be outputted
                             modifierIndices['o']!!.removeLast()
@@ -181,7 +163,7 @@ object Telex {
                     }
 
                     if (wIndices.size == 1 && lowercaseCh == 'o'
-                    && !matchWithoutTones(lowercaseInput, index, "oa")
+                    && !lowercaseVowel.contentEquals("oa")
                     // add edge case for "oaw" (should output "oă", not "ơă" or "ơa")
                     && !(firstVowelIndex != 0 && lowercaseVowel.contentEquals("ou"))
                     ) {
