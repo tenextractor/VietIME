@@ -196,13 +196,12 @@ object Telex {
 
                     // Check if "uo" with modifier 'w' should output "uơ" instead of "ươ"
                     // This only applies when:
-                    // * The initial is h, th, or qu (already handled by blocking qu > qư)
+                    // * There is an initial consonant, i.e. the syllable does not start with a vowel
                     // * The vowel is only "uo", nothing else
                     // * There is no final consonant
                     // For example: "huow" -> "huơ" (isSimpleUow=true), but "uow" -> "ươ" (isSimpleUow=false)
                     var uowIsNotUwow = false
-                    val initial = lowercaseInput.substring(0, firstVowelIndex)
-                    if ((initial == "h" || initial == "th") && !startedFinal
+                    if ((firstVowelIndex > 0) && !startedFinal && !doNotOutputNextChar
                         && modifierIndices['w']!!.size == 1 && lowercaseVowel.contentEquals("uo")) {
                          uowIsNotUwow = true
                     }
