@@ -212,4 +212,15 @@ class LibraryTest {
     @Test fun allSyllablesTest() {
         testCsv("all_telex_syllables.csv")
     }
+
+    @Test fun tonesTest() {
+        val testData = listOf(
+            Pair("gija", "gịa"),
+            Pair("giaj", "giạ"),
+            Pair("gyaj", "gỵa"),
+            Pair("uonwx", "ưỡn")
+        )
+
+        testList(testData)
+    }
 }

@@ -1,16 +1,10 @@
 object Telex {
     val CONSONANTS = setOf(
         'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z')
-    val VOWELS = setOf('a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O', 'U', 'Y')
+    val VOWELS = setOf('a', 'e', 'i', 'o', 'u', 'y')
 
-    val INITIALS = setOf("ch", "gh", "kh", "nh", "ng", "ph", "th", "tr", "dd", "ngh")
+    // val INITIALS = setOf("ch", "gh", "kh", "nh", "ng", "ph", "th", "tr", "dd", "ngh")
 
-    /** Set of letters that are used to add diacritics (breve, cirumflex, etc.)
-     * or tones (acute, grave, etc.)
-     */
-    val MODIFIERS = setOf(
-        'a', 'd', 'e', 'f', 'j', 'o', 'r', 's', 'w', 'x')
-    val DIACRITICS = setOf('a', 'd', 'e', 'o', 'w')
     val TONES = mapOf(
         'f' to ToneMark.GRAVE,
         'j' to ToneMark.DOT,
@@ -30,12 +24,14 @@ object Telex {
     */
     public fun telexToVietnamese(input: String): String {
 
-        // STAGE 1: calculate modifierIndices and firstVowelIndex
+        // STAGE 1: calculate modifierIndices, firstVowelIndex, startedFinal and lowercaseVowel
         // Example:
         //   Input: "vietej"
         //   Output:
         //     modifierIndices: { 'e': [2, 4], 'j': [5], the rest are empty lists }
         //     firstVowelIndex: 1
+        //     startedFinal: true
+        //     lowercaseVowel: "ie"
         val lowercaseInput = input.lowercase()
         var startedVowel = false
         var startedFinal = false
@@ -76,10 +72,10 @@ object Telex {
                 }
             }
 
-            if (startedVowel && !startedFinal) {
-                if (CONSONANTS.contains(ch) && !MODIFIERS.contains(ch)) {
+            if (startedVowel && !startedFinal && !AFTER_VOWEL_MODIFIERS.contains(ch)) {
+                if (CONSONANTS.contains(ch)) {
                     startedFinal = true
-                } else if (!AFTER_VOWEL_MODIFIERS.contains(ch)) {
+                } else {
                     lowercaseVowel.append(ch)
                 }
             }
@@ -99,7 +95,8 @@ object Telex {
         if (modifierIndices['d']!!.size > 1 && modifierIndices['d']!!.last() < firstVowelIndex)
             firstVowelIndex--
         
-        // apply correction to lowercaseVowel
+        // apply correction to lowercaseVowel:
+        // "gi" (unless there is no other vowel letter) and "qu" should be considered consonants
         if (lowercaseVowel.length > 1 && (lowercaseInput.slice(0..<2) == "gi" || lowercaseInput.slice(0..<2) == "qu"))
             lowercaseVowel.deleteAt(0)
 
@@ -110,9 +107,10 @@ object Telex {
         //   Output:
         //     outputWithoutTone: "viêt"
         //     tone: ToneMark.DOT
+        //     vowelCount: 2
         val output = StringBuilder()
         var tone: ToneMark? = null
-        var doNotOutputNextChar = false
+        var doNotOutputNextChar = false // this handles the "uwow" edge case
         var vowelCount = 0
         var wHasBeenUsed = false
 
@@ -164,8 +162,10 @@ object Telex {
 
                     if (wIndices.size == 1 && lowercaseCh == 'o'
                     && !lowercaseVowel.contentEquals("oa")
-                    // add edge case for "oaw" (should output "oă", not "ơă" or "ơa")
+                    // ↑ add edge case for "oaw" (should output "oă", not "ơă" or "ơa")
                     && !(firstVowelIndex != 0 && lowercaseVowel.contentEquals("ou"))
+                    // ↑ add edge case: any initial consonant + vowel "ou" with modifier 'w' + no final
+                    // should output "oư" and not "ơư"
                     ) {
                         output.append(Maps.HORN_MAP[ch])
                         wHasBeenUsed = true
@@ -199,7 +199,7 @@ object Telex {
                     // * There is an initial consonant, i.e. the syllable does not start with a vowel
                     // * The vowel is only "uo", nothing else
                     // * There is no final consonant
-                    // For example: "huow" -> "huơ" (isSimpleUow=true), but "uow" -> "ươ" (isSimpleUow=false)
+                    // For example: "huow" -> "huơ" (uowIsNotUwow=true), but "uow" -> "ươ" (uowIsNotUwow=false)
                     var uowIsNotUwow = false
                     if ((firstVowelIndex > 0) && !startedFinal && !doNotOutputNextChar
                         && modifierIndices['w']!!.size == 1 && lowercaseVowel.contentEquals("uo")) {
@@ -256,21 +256,21 @@ object Telex {
     }
 
     /** get_tone_mark_placement() function from vi-rs/src/editing.rs
-    /// Get nth character to place tone mark
-    ///
-    /// # Rules:
-    /// 1. If a vowel contains ơ or ê, tone mark goes there
-    /// 2. If a vowel contains `oa`, `oe`, `oo`, `oy`, tone mark should be on the
-    ///    second character
-    ///
-    /// If the accent style is [`AccentStyle::Old`], then:
-    /// - 3. For vowel length 3 or vowel length 2 with a final consonant, put it on the second vowel character
-    /// - 4. Else, put it on the first vowel character
-    ///
-    /// Otherwise:
-    /// - 3. If a vowel has 2 characters, put the tone mark on the first one
-    /// - 4. Otherwise, put the tone mark on the second vowel character
-    */
+     * Get nth character to place tone mark
+     *
+     * # Rules:
+     * 1. If a vowel contains ơ or ê, tone mark goes there
+     * 2. If a vowel contains `oa`, `oe`, `oo`, `oy`, tone mark should be on the
+     *    second character
+     *
+     * If the accent style is [`AccentStyle::Old`], then:
+     * - 3. For vowel length 3 or vowel length 2 with a final consonant, put it on the second vowel character
+     * - 4. Else, put it on the first vowel character
+     *
+     * Otherwise:
+     * - 3. If a vowel has 2 characters, put the tone mark on the first one
+     * - 4. Otherwise, put the tone mark on the second vowel character
+     */
     fun getToneMarkPosition(outputWithoutTone: CharSequence, firstVowelIndex: Int, vowelCount: Int): Int {
         val SPECIAL_VOWEL_PAIRS = setOf("oa", "oe", "oo", "uy", "uo", "ie")
 
