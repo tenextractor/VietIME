@@ -215,8 +215,8 @@ object Telex {
                 }
 
                 'w' -> {
-                    if (modifierIndices['w']!!.size >= 1
-                        && index == modifierIndices['w']!!.last()) continue
+                    if (modifierIndices['w']!!.size >= 1 && index == modifierIndices['w']!!.last() &&
+                        lowercaseVowel.any { it == 'a' || it == 'o' || it == 'u'}) continue
                 }
             }
 

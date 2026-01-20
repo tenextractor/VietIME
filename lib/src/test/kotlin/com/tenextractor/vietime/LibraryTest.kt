@@ -180,7 +180,9 @@ class LibraryTest {
     @Test fun miscTest() {
         val testData = listOf(
             Pair("ho", "ho"),
-            Pair("hosawt", "hoắt")
+            Pair("hosawt", "hoắt"),
+            Pair("chew", "chew"),
+            Pair("cfrs", "cfrs")
         )
 
         testList(testData)
