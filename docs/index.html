@@ -173,13 +173,13 @@
       initMetadataForClass(AbstractMutableList, 'AbstractMutableList', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtList, Collection]);
       initMetadataForClass(AbstractMap, 'AbstractMap', VOID, VOID, [KtMap]);
       initMetadataForClass(AbstractMutableMap, 'AbstractMutableMap', VOID, AbstractMap, [AbstractMap, KtMap]);
-      initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, KtSet, Collection]);
+      initMetadataForClass(AbstractMutableSet, 'AbstractMutableSet', VOID, AbstractMutableCollection, [AbstractMutableCollection, Collection, KtSet]);
       initMetadataForCompanion(Companion_2);
       initMetadataForClass(ArrayList, 'ArrayList', ArrayList_init_$Create$, AbstractMutableList, [AbstractMutableList, KtList, Collection]);
       initMetadataForClass(HashMap, 'HashMap', HashMap_init_$Create$, AbstractMutableMap, [AbstractMutableMap, KtMap]);
-      initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [KtSet, Collection, AbstractMutableSet]);
+      initMetadataForClass(HashMapEntrySetBase, 'HashMapEntrySetBase', VOID, AbstractMutableSet, [Collection, KtSet, AbstractMutableSet]);
       initMetadataForClass(HashMapEntrySet, 'HashMapEntrySet', VOID, HashMapEntrySetBase);
-      initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, KtSet, Collection]);
+      initMetadataForClass(HashSet, 'HashSet', HashSet_init_$Create$, AbstractMutableSet, [AbstractMutableSet, Collection, KtSet]);
       initMetadataForCompanion(Companion_3);
       initMetadataForClass(Itr, 'Itr');
       initMetadataForClass(KeysItr, 'KeysItr', VOID, Itr);
@@ -223,7 +223,7 @@
       initMetadataForInterface(InternalMap, 'InternalMap');
       initMetadataForClass(InternalHashMap, 'InternalHashMap', InternalHashMap_init_$Create$, VOID, [InternalMap]);
       initMetadataForClass(LinkedHashMap, 'LinkedHashMap', LinkedHashMap_init_$Create$, HashMap, [HashMap, KtMap]);
-      initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, KtSet, Collection]);
+      initMetadataForClass(LinkedHashSet, 'LinkedHashSet', LinkedHashSet_init_$Create$, HashSet, [HashSet, Collection, KtSet]);
       initMetadataForClass(BaseOutput, 'BaseOutput');
       initMetadataForClass(NodeJsOutput, 'NodeJsOutput', VOID, BaseOutput);
       initMetadataForClass(BufferedOutput, 'BufferedOutput', BufferedOutput, BaseOutput);
@@ -257,8 +257,8 @@
       initMetadataForCompanion(Companion_8);
       initMetadataForClass(Pair, 'Pair');
       initMetadataForObject(Telex, 'Telex');
-      initMetadataForObject(Maps, 'Maps');
       initMetadataForClass(ToneMark, 'ToneMark', VOID, Enum);
+      initMetadataForObject(Maps, 'Maps');
       //endregion
       function CharSequence() {
       }
@@ -2796,6 +2796,11 @@
         Companion_instance_4.checkElementIndex_s0yg86_k$(index, this.get_length_g42xv3_k$());
         this.string_1 = substring(this.string_1, 0, index) + toString(value) + substring_0(this.string_1, index + 1 | 0);
       };
+      protoOf(StringBuilder).deleteAt_mq1vvq_k$ = function (index) {
+        Companion_instance_4.checkElementIndex_s0yg86_k$(index, this.get_length_g42xv3_k$());
+        this.string_1 = substring(this.string_1, 0, index) + substring_0(this.string_1, index + 1 | 0);
+        return this;
+      };
       function uppercaseChar(_this__u8e3s4) {
         // Inline function 'kotlin.text.uppercase' call
         // Inline function 'kotlin.js.asDynamic' call
@@ -2860,6 +2865,10 @@
         } else {
           return compareTo(_this__u8e3s4, other);
         }
+      }
+      function contentEquals_0(_this__u8e3s4, other) {
+        _init_properties_stringJs_kt__bg7zye();
+        return contentEqualsImpl(_this__u8e3s4, other);
       }
       function sam$kotlin_Comparator$0(function_0) {
         this.function_1 = function_0;
@@ -3265,6 +3274,15 @@
           new EmptyMap();
         return EmptyMap_instance;
       }
+      function removeLast(_this__u8e3s4) {
+        var tmp;
+        if (_this__u8e3s4.isEmpty_y1axqb_k$()) {
+          throw NoSuchElementException_init_$Create$_0('List is empty.');
+        } else {
+          tmp = _this__u8e3s4.removeAt_6niowx_k$(get_lastIndex(_this__u8e3s4));
+        }
+        return tmp;
+      }
       function IntIterator() {
       }
       protoOf(IntIterator).next_20eer_k$ = function () {
@@ -3501,6 +3519,33 @@
         }
         return tmp;
       }
+      function contentEqualsImpl(_this__u8e3s4, other) {
+        var tmp;
+        if (!(_this__u8e3s4 == null) ? typeof _this__u8e3s4 === 'string' : false) {
+          tmp = !(other == null) ? typeof other === 'string' : false;
+        } else {
+          tmp = false;
+        }
+        if (tmp) {
+          return equals(_this__u8e3s4, other);
+        }
+        if (_this__u8e3s4 === other)
+          return true;
+        if (_this__u8e3s4 == null || other == null || !(charSequenceLength(_this__u8e3s4) === charSequenceLength(other)))
+          return false;
+        var inductionVariable = 0;
+        var last = charSequenceLength(_this__u8e3s4);
+        if (inductionVariable < last)
+          do {
+            var i = inductionVariable;
+            inductionVariable = inductionVariable + 1 | 0;
+            if (!(charSequenceGet(_this__u8e3s4, i) === charSequenceGet(other, i))) {
+              return false;
+            }
+          }
+          while (inductionVariable < last);
+        return true;
+      }
       function substring_1(_this__u8e3s4, range) {
         return substring(_this__u8e3s4, range.get_start_iypx6h_k$(), range.get_endInclusive_r07xpi_k$() + 1 | 0);
       }
@@ -3640,15 +3685,11 @@
           const code = char.charCodeAt(0);
           return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
         }
-        println(Telex_getInstance().telexToVietnamese_gzovua_k$('dduw'));
       }
       function Telex() {
         Telex_instance = this;
         this.CONSONANTS_1 = setOf_0([new Char(_Char___init__impl__6a9atx(98)), new Char(_Char___init__impl__6a9atx(99)), new Char(_Char___init__impl__6a9atx(100)), new Char(_Char___init__impl__6a9atx(102)), new Char(_Char___init__impl__6a9atx(103)), new Char(_Char___init__impl__6a9atx(104)), new Char(_Char___init__impl__6a9atx(106)), new Char(_Char___init__impl__6a9atx(107)), new Char(_Char___init__impl__6a9atx(108)), new Char(_Char___init__impl__6a9atx(109)), new Char(_Char___init__impl__6a9atx(110)), new Char(_Char___init__impl__6a9atx(112)), new Char(_Char___init__impl__6a9atx(113)), new Char(_Char___init__impl__6a9atx(114)), new Char(_Char___init__impl__6a9atx(115)), new Char(_Char___init__impl__6a9atx(116)), new Char(_Char___init__impl__6a9atx(118)), new Char(_Char___init__impl__6a9atx(119)), new Char(_Char___init__impl__6a9atx(120)), new Char(_Char___init__impl__6a9atx(122))]);
-        this.VOWELS_1 = setOf_0([new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(101)), new Char(_Char___init__impl__6a9atx(105)), new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(117)), new Char(_Char___init__impl__6a9atx(121)), new Char(_Char___init__impl__6a9atx(65)), new Char(_Char___init__impl__6a9atx(69)), new Char(_Char___init__impl__6a9atx(73)), new Char(_Char___init__impl__6a9atx(79)), new Char(_Char___init__impl__6a9atx(85)), new Char(_Char___init__impl__6a9atx(89))]);
-        this.INITIALS_1 = setOf_0(['ch', 'gh', 'kh', 'nh', 'ng', 'ph', 'th', 'tr', 'dd', 'ngh']);
-        this.MODIFIERS_1 = setOf_0([new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(100)), new Char(_Char___init__impl__6a9atx(101)), new Char(_Char___init__impl__6a9atx(102)), new Char(_Char___init__impl__6a9atx(106)), new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(114)), new Char(_Char___init__impl__6a9atx(115)), new Char(_Char___init__impl__6a9atx(119)), new Char(_Char___init__impl__6a9atx(120))]);
-        this.DIACRITICS_1 = setOf_0([new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(100)), new Char(_Char___init__impl__6a9atx(101)), new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(119))]);
+        this.VOWELS_1 = setOf_0([new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(101)), new Char(_Char___init__impl__6a9atx(105)), new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(117)), new Char(_Char___init__impl__6a9atx(121))]);
         this.TONES_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(102)), ToneMark_GRAVE_getInstance()), to(new Char(_Char___init__impl__6a9atx(106)), ToneMark_DOT_getInstance()), to(new Char(_Char___init__impl__6a9atx(114)), ToneMark_HOOK_getInstance()), to(new Char(_Char___init__impl__6a9atx(115)), ToneMark_ACUTE_getInstance()), to(new Char(_Char___init__impl__6a9atx(120)), ToneMark_TILDE_getInstance())]);
         this.AFTER_VOWEL_MODIFIERS_1 = setOf_0([new Char(_Char___init__impl__6a9atx(102)), new Char(_Char___init__impl__6a9atx(106)), new Char(_Char___init__impl__6a9atx(114)), new Char(_Char___init__impl__6a9atx(115)), new Char(_Char___init__impl__6a9atx(119)), new Char(_Char___init__impl__6a9atx(120))]);
       }
@@ -3659,6 +3700,7 @@
         var startedVowel = false;
         var startedFinal = false;
         var firstVowelIndex = -1;
+        var lowercaseVowel = StringBuilder_init_$Create$_0();
         var tmp = _Char___init__impl__6a9atx(97);
         // Inline function 'kotlin.collections.mutableListOf' call
         var tmp$ret$2 = ArrayList_init_$Create$();
@@ -3691,18 +3733,14 @@
         // Inline function 'kotlin.collections.mutableListOf' call
         var tmp$ret$9 = ArrayList_init_$Create$();
         var tmp_14 = to(new Char(tmp_13), tmp$ret$9);
-        var tmp_15 = _Char___init__impl__6a9atx(117);
+        var tmp_15 = _Char___init__impl__6a9atx(119);
         // Inline function 'kotlin.collections.mutableListOf' call
         var tmp$ret$10 = ArrayList_init_$Create$();
         var tmp_16 = to(new Char(tmp_15), tmp$ret$10);
-        var tmp_17 = _Char___init__impl__6a9atx(119);
+        var tmp_17 = _Char___init__impl__6a9atx(120);
         // Inline function 'kotlin.collections.mutableListOf' call
         var tmp$ret$11 = ArrayList_init_$Create$();
-        var tmp_18 = to(new Char(tmp_17), tmp$ret$11);
-        var tmp_19 = _Char___init__impl__6a9atx(120);
-        // Inline function 'kotlin.collections.mutableListOf' call
-        var tmp$ret$12 = ArrayList_init_$Create$();
-        var modifierIndices = mapOf([tmp_0, tmp_2, tmp_4, tmp_6, tmp_8, tmp_10, tmp_12, tmp_14, tmp_16, tmp_18, to(new Char(tmp_19), tmp$ret$12)]);
+        var modifierIndices = mapOf([tmp_0, tmp_2, tmp_4, tmp_6, tmp_8, tmp_10, tmp_12, tmp_14, tmp_16, to(new Char(tmp_17), tmp$ret$11)]);
         var inductionVariable = 0;
         var last_0 = lowercaseInput.length;
         while (inductionVariable < last_0) {
@@ -3713,6 +3751,13 @@
             if (this.VOWELS_1.contains_aljjnj_k$(new Char(ch))) {
               firstVowelIndex = index;
               startedVowel = true;
+            }
+          }
+          if (startedVowel && !startedFinal && !this.AFTER_VOWEL_MODIFIERS_1.contains_aljjnj_k$(new Char(ch))) {
+            if (this.CONSONANTS_1.contains_aljjnj_k$(new Char(ch))) {
+              startedFinal = true;
+            } else {
+              lowercaseVowel.append_t84oo1_k$(ch);
             }
           }
           if (this.AFTER_VOWEL_MODIFIERS_1.contains_aljjnj_k$(new Char(ch))) {
@@ -3726,6 +3771,9 @@
         if (ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(100)))).get_size_woubt6_k$() > 1 && last(ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(100))))) < firstVowelIndex) {
           firstVowelIndex = firstVowelIndex - 1 | 0;
         }
+        if (lowercaseVowel.get_length_g42xv3_k$() > 1 && (slice(lowercaseInput, until(0, 2)) === 'gi' || slice(lowercaseInput, until(0, 2)) === 'qu')) {
+          lowercaseVowel.deleteAt_mq1vvq_k$(0);
+        }
         var output = StringBuilder_init_$Create$_0();
         var tone = null;
         var doNotOutputNextChar = false;
@@ -3733,46 +3781,50 @@
         var wHasBeenUsed = false;
         var inductionVariable_0 = 0;
         var last_1 = input.length;
-        $l$loop_5: while (inductionVariable_0 < last_1) {
+        $l$loop_6: while (inductionVariable_0 < last_1) {
           var index_0 = inductionVariable_0;
           var ch_0 = charCodeAt(input, inductionVariable_0);
           inductionVariable_0 = inductionVariable_0 + 1 | 0;
           if (doNotOutputNextChar) {
             doNotOutputNextChar = false;
-            continue $l$loop_5;
+            continue $l$loop_6;
           }
           var lowercaseCh = charCodeAt(lowercaseInput, index_0);
           if (lowercaseCh === _Char___init__impl__6a9atx(97) || lowercaseCh === _Char___init__impl__6a9atx(100) || (lowercaseCh === _Char___init__impl__6a9atx(101) || lowercaseCh === _Char___init__impl__6a9atx(111))) {
             var thisModifierIndices = ensureNotNull(modifierIndices.get_wei43m_k$(new Char(lowercaseCh)));
             if (thisModifierIndices.get_size_woubt6_k$() >= 2 && index_0 === last(thisModifierIndices))
-              continue $l$loop_5;
+              continue $l$loop_6;
             if (thisModifierIndices.get_size_woubt6_k$() === 2 && index_0 === thisModifierIndices.get_c1px32_k$(0)) {
               if (lowercaseCh === _Char___init__impl__6a9atx(100)) {
                 output.append_t8pm91_k$(Maps_getInstance().STROKE_MAP_1.get_wei43m_k$(new Char(ch_0)));
+              } else if (lowercaseCh === _Char___init__impl__6a9atx(111) && contentEquals_0(lowercaseVowel, 'oeo')) {
+                removeLast(ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(111)))));
+                output.append_t84oo1_k$(ch_0);
               } else {
                 output.append_t8pm91_k$(Maps_getInstance().CIRCUMFLEX_MAP_1.get_wei43m_k$(new Char(ch_0)));
                 vowelCount = vowelCount + 1 | 0;
               }
-              continue $l$loop_5;
+              continue $l$loop_6;
             }
             var wIndices = ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119))));
-            if (wIndices.get_size_woubt6_k$() === 1 && (lowercaseCh === _Char___init__impl__6a9atx(97) || lowercaseCh === _Char___init__impl__6a9atx(111))) {
-              if (lowercaseCh === _Char___init__impl__6a9atx(97) && !wHasBeenUsed) {
-                output.append_t8pm91_k$(Maps_getInstance().BREVE_MAP_1.get_wei43m_k$(new Char(ch_0)));
-                wHasBeenUsed = true;
-              }
-              if (lowercaseCh === _Char___init__impl__6a9atx(111)) {
-                output.append_t8pm91_k$(Maps_getInstance().HORN_MAP_1.get_wei43m_k$(new Char(ch_0)));
-              }
+            if (wIndices.get_size_woubt6_k$() === 1 && lowercaseCh === _Char___init__impl__6a9atx(97) && !wHasBeenUsed) {
+              output.append_t8pm91_k$(Maps_getInstance().BREVE_MAP_1.get_wei43m_k$(new Char(ch_0)));
+              wHasBeenUsed = true;
               vowelCount = vowelCount + 1 | 0;
-              continue $l$loop_5;
+              continue $l$loop_6;
+            }
+            if (wIndices.get_size_woubt6_k$() === 1 && lowercaseCh === _Char___init__impl__6a9atx(111) && !contentEquals_0(lowercaseVowel, 'oa') && !(!(firstVowelIndex === 0) && contentEquals_0(lowercaseVowel, 'ou'))) {
+              output.append_t8pm91_k$(Maps_getInstance().HORN_MAP_1.get_wei43m_k$(new Char(ch_0)));
+              wHasBeenUsed = true;
+              vowelCount = vowelCount + 1 | 0;
+              continue $l$loop_6;
             }
           } else if (lowercaseCh === _Char___init__impl__6a9atx(102) || lowercaseCh === _Char___init__impl__6a9atx(106) || (lowercaseCh === _Char___init__impl__6a9atx(114) || (lowercaseCh === _Char___init__impl__6a9atx(115) || lowercaseCh === _Char___init__impl__6a9atx(120)))) {
             var thisModifierIndices_0 = ensureNotNull(modifierIndices.get_wei43m_k$(new Char(lowercaseCh)));
             if (thisModifierIndices_0.get_size_woubt6_k$() === 1)
               tone = ensureNotNull(this.TONES_1.get_wei43m_k$(new Char(lowercaseCh)));
             if (thisModifierIndices_0.get_size_woubt6_k$() >= 1 && index_0 === last(thisModifierIndices_0))
-              continue $l$loop_5;
+              continue $l$loop_6;
           } else if (lowercaseCh === _Char___init__impl__6a9atx(117)) {
             if (lowercaseInput.length >= (index_0 + 4 | 0)) {
               if (slice(lowercaseInput, until(index_0, index_0 + 4 | 0)) === 'uwow' && ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119)))).get_size_woubt6_k$() === 2) {
@@ -3780,15 +3832,39 @@
                 doNotOutputNextChar = true;
               }
             }
-            if (ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119)))).get_size_woubt6_k$() === 1 && !wHasBeenUsed && !(charCodeAt(lowercaseInput, 0) === _Char___init__impl__6a9atx(113) && index_0 === 1)) {
+            var uowIsNotUwow = false;
+            if (firstVowelIndex > 0 && !startedFinal && !doNotOutputNextChar && ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119)))).get_size_woubt6_k$() === 1 && contentEquals_0(lowercaseVowel, 'uo')) {
+              uowIsNotUwow = true;
+            }
+            if (ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119)))).get_size_woubt6_k$() === 1 && !wHasBeenUsed && !(charCodeAt(lowercaseInput, 0) === _Char___init__impl__6a9atx(113) && index_0 === 1) && !uowIsNotUwow) {
               output.append_t8pm91_k$(Maps_getInstance().HORN_MAP_1.get_wei43m_k$(new Char(ch_0)));
               vowelCount = vowelCount + 1 | 0;
               wHasBeenUsed = true;
-              continue $l$loop_5;
+              continue $l$loop_6;
             }
           } else if (lowercaseCh === _Char___init__impl__6a9atx(119)) {
-            if (ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119)))).get_size_woubt6_k$() >= 1 && index_0 === last(ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119))))))
-              continue $l$loop_5;
+            var tmp_18;
+            if (ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119)))).get_size_woubt6_k$() >= 1 && index_0 === last(ensureNotNull(modifierIndices.get_wei43m_k$(new Char(_Char___init__impl__6a9atx(119)))))) {
+              var tmp$ret$13;
+              $l$block: {
+                // Inline function 'kotlin.text.any' call
+                var inductionVariable_1 = 0;
+                while (inductionVariable_1 < charSequenceLength(lowercaseVowel)) {
+                  var element = charSequenceGet(lowercaseVowel, inductionVariable_1);
+                  inductionVariable_1 = inductionVariable_1 + 1 | 0;
+                  if (element === _Char___init__impl__6a9atx(97) || element === _Char___init__impl__6a9atx(111) || element === _Char___init__impl__6a9atx(117)) {
+                    tmp$ret$13 = true;
+                    break $l$block;
+                  }
+                }
+                tmp$ret$13 = false;
+              }
+              tmp_18 = tmp$ret$13;
+            } else {
+              tmp_18 = false;
+            }
+            if (tmp_18)
+              continue $l$loop_6;
           }
           output.append_t84oo1_k$(ch_0);
           if (this.VOWELS_1.contains_aljjnj_k$(new Char(lowercaseCh))) {
@@ -3798,16 +3874,16 @@
         if (tone == null)
           return output.toString();
         if (lowercaseInput === 'gija') {
-          var tmp_20 = tone.map_1.get_wei43m_k$(new Char(output.get_kdzpvg_k$(1)));
-          var tmp1_elvis_lhs = tmp_20 == null ? null : tmp_20.value_1;
-          var tmp_21;
-          var tmp_22 = tmp1_elvis_lhs;
-          if ((tmp_22 == null ? null : new Char(tmp_22)) == null) {
-            tmp_21 = output.get_kdzpvg_k$(1);
+          var tmp_19 = tone.map_1.get_wei43m_k$(new Char(output.get_kdzpvg_k$(1)));
+          var tmp1_elvis_lhs = tmp_19 == null ? null : tmp_19.value_1;
+          var tmp_20;
+          var tmp_21 = tmp1_elvis_lhs;
+          if ((tmp_21 == null ? null : new Char(tmp_21)) == null) {
+            tmp_20 = output.get_kdzpvg_k$(1);
           } else {
-            tmp_21 = tmp1_elvis_lhs;
+            tmp_20 = tmp1_elvis_lhs;
           }
-          output.set_m79y3v_k$(1, tmp_21);
+          output.set_m79y3v_k$(1, tmp_20);
           return output.toString();
         }
         if (vowelCount > 1 && (slice(lowercaseInput, until(0, 2)) === 'gi' || slice(lowercaseInput, until(0, 2)) === 'qu')) {
@@ -3817,16 +3893,16 @@
         if (vowelCount <= 0 || firstVowelIndex < 0 || ((firstVowelIndex + vowelCount | 0) - 1 | 0) >= output.get_length_g42xv3_k$())
           return output.toString();
         var toneMarkPosition = this.getToneMarkPosition_6nqs3j_k$(output, firstVowelIndex, vowelCount);
-        var tmp_23 = tone.map_1.get_wei43m_k$(new Char(output.get_kdzpvg_k$(toneMarkPosition)));
-        var tmp2_elvis_lhs = tmp_23 == null ? null : tmp_23.value_1;
-        var tmp_24;
-        var tmp_25 = tmp2_elvis_lhs;
-        if ((tmp_25 == null ? null : new Char(tmp_25)) == null) {
-          tmp_24 = output.get_kdzpvg_k$(toneMarkPosition);
+        var tmp_22 = tone.map_1.get_wei43m_k$(new Char(output.get_kdzpvg_k$(toneMarkPosition)));
+        var tmp2_elvis_lhs = tmp_22 == null ? null : tmp_22.value_1;
+        var tmp_23;
+        var tmp_24 = tmp2_elvis_lhs;
+        if ((tmp_24 == null ? null : new Char(tmp_24)) == null) {
+          tmp_23 = output.get_kdzpvg_k$(toneMarkPosition);
         } else {
-          tmp_24 = tmp2_elvis_lhs;
+          tmp_23 = tmp2_elvis_lhs;
         }
-        output.set_m79y3v_k$(toneMarkPosition, tmp_24);
+        output.set_m79y3v_k$(toneMarkPosition, tmp_23);
         return output.toString();
       };
       protoOf(Telex).getToneMarkPosition_6nqs3j_k$ = function (outputWithoutTone, firstVowelIndex, vowelCount) {
@@ -3884,19 +3960,6 @@
           new Telex();
         return Telex_instance;
       }
-      function Maps() {
-        Maps_instance = this;
-        this.CIRCUMFLEX_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(226))), to(new Char(_Char___init__impl__6a9atx(101)), new Char(_Char___init__impl__6a9atx(234))), to(new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(244))), to(new Char(_Char___init__impl__6a9atx(65)), new Char(_Char___init__impl__6a9atx(194))), to(new Char(_Char___init__impl__6a9atx(69)), new Char(_Char___init__impl__6a9atx(202))), to(new Char(_Char___init__impl__6a9atx(79)), new Char(_Char___init__impl__6a9atx(212)))]);
-        this.STROKE_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(100)), new Char(_Char___init__impl__6a9atx(273))), to(new Char(_Char___init__impl__6a9atx(68)), new Char(_Char___init__impl__6a9atx(272)))]);
-        this.HORN_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(117)), new Char(_Char___init__impl__6a9atx(432))), to(new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(417))), to(new Char(_Char___init__impl__6a9atx(85)), new Char(_Char___init__impl__6a9atx(431))), to(new Char(_Char___init__impl__6a9atx(79)), new Char(_Char___init__impl__6a9atx(416)))]);
-        this.BREVE_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(259))), to(new Char(_Char___init__impl__6a9atx(65)), new Char(_Char___init__impl__6a9atx(258)))]);
-      }
-      var Maps_instance;
-      function Maps_getInstance() {
-        if (Maps_instance == null)
-          new Maps();
-        return Maps_instance;
-      }
       var ToneMark_ACUTE_instance;
       var ToneMark_GRAVE_instance;
       var ToneMark_HOOK_instance;
@@ -3916,6 +3979,19 @@
       function ToneMark(name, ordinal, map) {
         Enum.call(this, name, ordinal);
         this.map_1 = map;
+      }
+      function Maps() {
+        Maps_instance = this;
+        this.CIRCUMFLEX_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(226))), to(new Char(_Char___init__impl__6a9atx(101)), new Char(_Char___init__impl__6a9atx(234))), to(new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(244))), to(new Char(_Char___init__impl__6a9atx(65)), new Char(_Char___init__impl__6a9atx(194))), to(new Char(_Char___init__impl__6a9atx(69)), new Char(_Char___init__impl__6a9atx(202))), to(new Char(_Char___init__impl__6a9atx(79)), new Char(_Char___init__impl__6a9atx(212)))]);
+        this.STROKE_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(100)), new Char(_Char___init__impl__6a9atx(273))), to(new Char(_Char___init__impl__6a9atx(68)), new Char(_Char___init__impl__6a9atx(272)))]);
+        this.HORN_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(117)), new Char(_Char___init__impl__6a9atx(432))), to(new Char(_Char___init__impl__6a9atx(111)), new Char(_Char___init__impl__6a9atx(417))), to(new Char(_Char___init__impl__6a9atx(85)), new Char(_Char___init__impl__6a9atx(431))), to(new Char(_Char___init__impl__6a9atx(79)), new Char(_Char___init__impl__6a9atx(416)))]);
+        this.BREVE_MAP_1 = mapOf([to(new Char(_Char___init__impl__6a9atx(97)), new Char(_Char___init__impl__6a9atx(259))), to(new Char(_Char___init__impl__6a9atx(65)), new Char(_Char___init__impl__6a9atx(258)))]);
+      }
+      var Maps_instance;
+      function Maps_getInstance() {
+        if (Maps_instance == null)
+          new Maps();
+        return Maps_instance;
       }
       function ToneMark_ACUTE_getInstance() {
         ToneMark_initEntries();
