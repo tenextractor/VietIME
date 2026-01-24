@@ -227,6 +227,6 @@ class LibraryTest {
     }
 
     @Test fun VNITest() {
-
+        testCsv("VNI_all_syllables.csv")
     }
 }
