@@ -1,12 +1,6 @@
 package com.tenextractor.vietime
 
 object Telex {
-    val CONSONANTS = setOf(
-        'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z')
-    val VOWELS = setOf('a', 'e', 'i', 'o', 'u', 'y')
-
-    // val INITIALS = setOf("ch", "gh", "kh", "nh", "ng", "ph", "th", "tr", "dd", "ngh")
-
     val TONES = mapOf(
         'f' to ToneMark.GRAVE,
         'j' to ToneMark.DOT,
@@ -60,7 +54,7 @@ object Telex {
         for ((index, ch) in lowercaseInput.withIndex()) {
 
             if (!startedVowel) {
-                if (VOWELS.contains(ch)) {
+                if (Maps.VOWELS.contains(ch)) {
                     // TODO: this code needs to be refined further
                     // if a syllable has a weird initial (like 'cl' in 'clown') that we are sure does not belong to Vietnamese,
                     // then stop the conversion process and just output the input as it is
@@ -75,7 +69,7 @@ object Telex {
             }
 
             if (startedVowel && !startedFinal && !AFTER_VOWEL_MODIFIERS.contains(ch)) {
-                if (CONSONANTS.contains(ch)) {
+                if (Maps.CONSONANTS.contains(ch)) {
                     startedFinal = true
                 } else {
                     lowercaseVowel.append(ch)
@@ -223,7 +217,7 @@ object Telex {
             }
 
             output.append(ch) // default behavior: just output the character from input as it is
-            if (VOWELS.contains(lowercaseCh)) vowelCount++
+            if (Maps.VOWELS.contains(lowercaseCh)) vowelCount++
         }
 
         // STAGE 3: apply a tone mark (if any)
