@@ -1,4 +1,11 @@
+package com.tenextractor.vietime
+
 object Maps {
+    val CONSONANTS = setOf(
+        'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z')
+    
+    val VOWELS = setOf('a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O', 'U', 'Y')
+
     /** A map of characters without accent to character with circumflex accent */
     public val CIRCUMFLEX_MAP = mapOf(
         'a' to 'â',

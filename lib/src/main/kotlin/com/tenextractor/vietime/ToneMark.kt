@@ -1,3 +1,5 @@
+package com.tenextractor.vietime
+
 /** Vietnamese tone marks.
  *
  * Represents the five tone marks used in Vietnamese writing system.
