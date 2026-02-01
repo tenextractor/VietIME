@@ -6,10 +6,18 @@ import kotlin.test.assertEquals
 class LibraryTest {
     // commented out test cases are failing
 
-    fun testList(testData: List<Pair<String, String>>) {
+    fun testList(testData: List<Pair<String, String>>, function: (String) -> String) {
         for (item in testData) {
-            assertEquals(item.second, Telex.telexToVietnamese(item.first),
-            message = "Failed test case: <${item.first}>")
+            var output = ""
+            var exceptionMessage = ""
+            try {
+                output = function(item.first)
+            } catch (e: Exception) {
+                exceptionMessage = e.message ?: ""
+            }
+            assertEquals(item.second, output,
+                message = "Failed test case: <${item.first}>" + if (exceptionMessage != "") ": Exception: $exceptionMessage" else ""
+            )
         }
     }
 
@@ -27,8 +35,8 @@ class LibraryTest {
         return testData
     }
 
-    fun testCsv(resourceFileName: String) {
-        testList(readCsv(resourceFileName))
+    fun testCsv(resourceFileName: String, function: (String) -> String) {
+        testList(readCsv(resourceFileName), function)
     }
 
     @Test fun initalTest() {
@@ -42,7 +50,7 @@ class LibraryTest {
             Pair("dandg", "đang")
         )
 
-        testList(testData)
+        testList(testData, Telex::telexToVietnamese)
     }
 
     @Test fun monophthongTest() {
@@ -73,7 +81,7 @@ class LibraryTest {
             Pair("thuws", "thứ")
         )
 
-        testList(testData)
+        testList(testData, Telex::telexToVietnamese)
     }
 
     @Test fun diphthongTest() {
@@ -146,7 +154,7 @@ class LibraryTest {
             Pair("yeeus", "yếu")
         )
 
-        testList(testData)
+        testList(testData, Telex::telexToVietnamese)
     }
 
     @Test fun triphthongTest() {
@@ -174,7 +182,7 @@ class LibraryTest {
             Pair("khuyuj", "khuỵu"),
         )
 
-        testList(testData)
+        testList(testData, Telex::telexToVietnamese)
     }
 
     @Test fun miscTest() {
@@ -185,7 +193,7 @@ class LibraryTest {
             Pair("cfrs", "cfrs")
         )
 
-        testList(testData)
+        testList(testData, Telex::telexToVietnamese)
     }
 
     @Test fun vowelModifierTest() {
@@ -208,11 +216,11 @@ class LibraryTest {
             Pair("luawr","lửa")
         )
 
-        testList(testData)
+        testList(testData, Telex::telexToVietnamese)
     }
 
     @Test fun allSyllablesTest() {
-        testCsv("all_telex_syllables.csv")
+        testCsv("all_telex_syllables.csv", Telex::telexToVietnamese)
     }
 
     @Test fun tonesTest() {
@@ -223,10 +231,10 @@ class LibraryTest {
             Pair("uonwx", "ưỡn")
         )
 
-        testList(testData)
+        testList(testData, Telex::telexToVietnamese)
     }
 
     @Test fun VNITest() {
-        testCsv("VNI_all_syllables.csv")
+        testCsv("VNI_all_syllables.csv", VNI::VNIToVietnamese)
     }
 }

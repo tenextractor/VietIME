@@ -6,6 +6,11 @@ object Maps {
     
     val VOWELS = setOf('a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O', 'U', 'Y')
 
+    val VOWELS_WITH_DIACRITICS = setOf(
+        'a', 'ă', 'â', 'e', 'ê', 'i', 'o', 'ô', 'ơ', 'u', 'ư', 'y',
+        'A', 'Ă', 'Â', 'E', 'Ê', 'I', 'O', 'Ô', 'Ơ', 'U', 'Ư', 'Y'
+    )
+
     /** A map of characters without accent to character with circumflex accent */
     public val CIRCUMFLEX_MAP = mapOf(
         'a' to 'â',
