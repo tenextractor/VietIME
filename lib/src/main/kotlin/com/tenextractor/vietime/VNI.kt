@@ -41,14 +41,14 @@ object VNI {
                 if (ch.isDigit() && firstModifierIndex[ch.digitToInt()] == -1)
                     firstModifierIndex[ch.digitToInt()] = index
 
-                    if (!startedVowel && Maps.CONSONANTS.contains(ch)) lowercaseInitial.append(ch)
+                    if (!startedVowel && Common.CONSONANTS.contains(ch)) lowercaseInitial.append(ch)
 
-                        if (!startedFinal && Maps.VOWELS.contains(ch)) {
+                        if (!startedFinal && Common.VOWELS.contains(ch)) {
                             if (!startedVowel) startedVowel = true
                                 lowercaseVowel.append(ch)
                         }
 
-                        if (startedVowel && Maps.CONSONANTS.contains(ch))
+                        if (startedVowel && Common.CONSONANTS.contains(ch))
                             startedFinal = true
 
                             when (ch) {
@@ -100,28 +100,28 @@ object VNI {
                     // handle modifiable characters
                     'a' -> {
                         if (firstModifierIndex[8] != -1) {
-                            output.append(Maps.BREVE_MAP[input[index]])
+                            output.append(Common.BREVE_MAP[input[index]])
                             continue
                         }
 
                         if (firstModifierIndex[6] != -1) {
-                            output.append(Maps.CIRCUMFLEX_MAP[input[index]])
+                            output.append(Common.CIRCUMFLEX_MAP[input[index]])
                             continue
                         }
                     }
                     'd' -> if (firstModifierIndex[9] != -1) {
-                        output.append(Maps.STROKE_MAP[input[index]])
+                        output.append(Common.STROKE_MAP[input[index]])
                         continue
                     }
                     'e', 'o' -> {
                         if (firstModifierIndex[6] != -1) {
-                            output.append(Maps.CIRCUMFLEX_MAP[input[index]])
+                            output.append(Common.CIRCUMFLEX_MAP[input[index]])
                             continue
                         }
 
                         if (ch == 'o' && firstModifierIndex[7] != -1 &&
                             !(output.length != 0 && lowercaseVowel.contentEquals("ou") && !startedFinal)) {
-                            output.append(Maps.HORN_MAP[input[index]])
+                            output.append(Common.HORN_MAP[input[index]])
                             continue
                             }
                     }
@@ -130,7 +130,7 @@ object VNI {
                     !uHornOutputted &&
                     !(output.getOrNull(0)?.lowercaseChar() == 'q' && output.length == 1) &&
                     !(output.length != 0 && lowercaseVowel.contentEquals("uo") && !startedFinal)) {
-                        output.append(Maps.HORN_MAP[input[index]])
+                        output.append(Common.HORN_MAP[input[index]])
                         uHornOutputted = true
                         continue
                     }
@@ -153,7 +153,7 @@ object VNI {
                 var firstVowelIndex = -1
                 var vowelCount = lowercaseVowel.length
                 for ((index, ch) in output.withIndex()) {
-                    if (Maps.VOWELS_WITH_DIACRITICS.contains(ch)) {
+                    if (Common.VOWELS_WITH_DIACRITICS.contains(ch)) {
                         firstVowelIndex = index
                         break
                     }

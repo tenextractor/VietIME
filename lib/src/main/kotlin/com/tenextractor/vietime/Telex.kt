@@ -54,7 +54,7 @@ object Telex {
         for ((index, ch) in lowercaseInput.withIndex()) {
 
             if (!startedVowel) {
-                if (Maps.VOWELS.contains(ch)) {
+                if (Common.VOWELS.contains(ch)) {
                     // TODO: this code needs to be refined further
                     // if a syllable has a weird initial (like 'cl' in 'clown') that we are sure does not belong to Vietnamese,
                     // then stop the conversion process and just output the input as it is
@@ -69,7 +69,7 @@ object Telex {
             }
 
             if (startedVowel && !startedFinal && !AFTER_VOWEL_MODIFIERS.contains(ch)) {
-                if (Maps.CONSONANTS.contains(ch)) {
+                if (Common.CONSONANTS.contains(ch)) {
                     startedFinal = true
                 } else {
                     lowercaseVowel.append(ch)
@@ -132,14 +132,14 @@ object Telex {
                     // a diacritic needs to be applied to the first `d`
                     if (thisModifierIndices.size == 2 && index == thisModifierIndices[0]) {
                         if (lowercaseCh == 'd') {
-                            output.append(Maps.STROKE_MAP[ch])
+                            output.append(Common.STROKE_MAP[ch])
                         } else if (lowercaseCh == 'o' && lowercaseVowel.contentEquals("oeo")) {
                             // handle "oeo" edge case (should output "oeo", not "ôe"):
                             // remove the second 'o''s index from modifierIndices so that it will be outputted
                             modifierIndices['o']!!.removeLast()
                             output.append(ch)
                         } else {
-                            output.append(Maps.CIRCUMFLEX_MAP[ch])
+                            output.append(Common.CIRCUMFLEX_MAP[ch])
                             vowelCount++
                         }
 
@@ -150,7 +150,7 @@ object Telex {
                     val wIndices = modifierIndices['w']!!
 
                     if (wIndices.size == 1 && lowercaseCh == 'a' && !wHasBeenUsed) {
-                        output.append(Maps.BREVE_MAP[ch])
+                        output.append(Common.BREVE_MAP[ch])
                         wHasBeenUsed = true
                         vowelCount++
                         continue
@@ -163,7 +163,7 @@ object Telex {
                     // ↑ add edge case: any initial consonant + vowel "ou" with modifier 'w' + no final
                     // should output "oư" and not "ơư"
                     ) {
-                        output.append(Maps.HORN_MAP[ch])
+                        output.append(Common.HORN_MAP[ch])
                         wHasBeenUsed = true
                         vowelCount++
                         continue
@@ -203,7 +203,7 @@ object Telex {
                     }
 
                     if (modifierIndices['w']!!.size == 1 && !wHasBeenUsed && !(lowercaseInput[0] == 'q' && index == 1) && !uowIsNotUwow) {
-                        output.append(Maps.HORN_MAP[ch])
+                        output.append(Common.HORN_MAP[ch])
                         vowelCount++
                         wHasBeenUsed = true
                         continue
@@ -217,7 +217,7 @@ object Telex {
             }
 
             output.append(ch) // default behavior: just output the character from input as it is
-            if (Maps.VOWELS.contains(lowercaseCh)) vowelCount++
+            if (Common.VOWELS.contains(lowercaseCh)) vowelCount++
         }
 
         // STAGE 3: apply a tone mark (if any)
