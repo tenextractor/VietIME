@@ -49,12 +49,7 @@ object Common {
     val CONSONANTS = setOf(
         'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z')
     
-    val VOWELS = setOf('a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O', 'U', 'Y')
-
-    val VOWELS_WITH_DIACRITICS = setOf(
-        'a', 'ă', 'â', 'e', 'ê', 'i', 'o', 'ô', 'ơ', 'u', 'ư', 'y',
-        'A', 'Ă', 'Â', 'E', 'Ê', 'I', 'O', 'Ô', 'Ơ', 'U', 'Ư', 'Y'
-    )
+    val VOWELS = setOf('a', 'e', 'i', 'o', 'u', 'y')
 
     /** A map of characters without accent to character with circumflex accent */
     public val CIRCUMFLEX_MAP = mapOf(
