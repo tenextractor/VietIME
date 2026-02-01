@@ -12,18 +12,10 @@ object VNI {
     fun VNIToVietnamese(input: String): String {
         val lowercaseInput = input.lowercase()
 
-        val firstModifierIndex = MutableList(10) { -1 }
+        val modifierExists = MutableList(10) { false }
 
         val lowercaseInitial = StringBuilder()
         val lowercaseVowel = StringBuilder()
-
-        /** This will be set if the input contains 'a' (either case) */
-        var inputHasA = false
-        var inputHasD = false
-        /** This will be set if the input contains 'o' or 'u' */
-        var hornApplicable = false
-        /** This will be set if the input contains 'a', 'e' or 'o' */
-        var circumflexApplicable = false
 
         var hasLetters = false
 
@@ -38,8 +30,8 @@ object VNI {
             if (ch.isLetter()) hasLetters = true
 
                 // update firstModifierIndex
-                if (ch.isDigit() && firstModifierIndex[ch.digitToInt()] == -1)
-                    firstModifierIndex[ch.digitToInt()] = index
+                if (ch.isDigit() && !modifierExists[ch.digitToInt()])
+                    modifierExists[ch.digitToInt()] = true
 
                     if (!startedVowel && Common.CONSONANTS.contains(ch)) lowercaseInitial.append(ch)
 
@@ -52,17 +44,6 @@ object VNI {
                             startedFinal = true
 
                             when (ch) {
-                                'a' -> {
-                                    inputHasA = true
-                                    circumflexApplicable = true
-                                }
-                                'd' -> inputHasD = true
-                                'e' -> circumflexApplicable = true
-                                'o' -> {
-                                    circumflexApplicable = true
-                                    hornApplicable = true
-                                }
-                                'u' -> hornApplicable = true
                                 '1', '2', '3', '4', '5' -> tone = TONES[ch]!!
                             }
         }
@@ -86,47 +67,42 @@ object VNI {
              * This variable is checked to ensure that only the first 'u' is converted to 'ư' when there are multiple 'u's.
              * For example, "uou7" should output "ươu", not "ươư"; "uu7" should output "ưu", not "ưư".*/
             var uHornOutputted = false
+
             for ((index, ch) in lowercaseInput.withIndex()) {
                 when (ch) {
                     // handle numbers
-                    '1', '2', '3', '4', '5' -> if (lowercaseVowel.length > 0 && TONES[ch]!! == tone && firstModifierIndex[ch.digitToInt()] == index) continue
-                    '6' -> if (circumflexApplicable && firstModifierIndex[6] == index) continue
-                    '8' -> if (inputHasA && firstModifierIndex[8] == index) continue
-                    // manually suppressing '7's based on how many horns were applied is too complicated and is not an essential feature anyway,
-                    // so if an 'o' or 'u' is detected in the input, all '7's are removed from the output
-                    '7' -> if (hornApplicable) continue
-                    '9' -> if (inputHasD && firstModifierIndex[9] == index) continue
+                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' -> continue
 
                     // handle modifiable characters
                     'a' -> {
-                        if (firstModifierIndex[8] != -1) {
+                        if (modifierExists[8]) {
                             output.append(Common.BREVE_MAP[input[index]])
                             continue
                         }
 
-                        if (firstModifierIndex[6] != -1) {
+                        if (modifierExists[6]) {
                             output.append(Common.CIRCUMFLEX_MAP[input[index]])
                             continue
                         }
                     }
-                    'd' -> if (firstModifierIndex[9] != -1) {
+                    'd' -> if (modifierExists[9]) {
                         output.append(Common.STROKE_MAP[input[index]])
                         continue
                     }
                     'e', 'o' -> {
-                        if (firstModifierIndex[6] != -1) {
+                        if (modifierExists[6]) {
                             output.append(Common.CIRCUMFLEX_MAP[input[index]])
                             continue
                         }
 
-                        if (ch == 'o' && firstModifierIndex[7] != -1 &&
+                        if (ch == 'o' && modifierExists[7] &&
                             !(output.length != 0 && lowercaseVowel.contentEquals("ou") && !startedFinal)) {
                             output.append(Common.HORN_MAP[input[index]])
                             continue
                             }
                     }
 
-                    'u' -> if (firstModifierIndex[7] != -1 &&
+                    'u' -> if (modifierExists[7] &&
                     !uHornOutputted &&
                     !(output.getOrNull(0)?.lowercaseChar() == 'q' && output.length == 1) &&
                     !(output.length != 0 && lowercaseVowel.contentEquals("uo") && !startedFinal)) {
@@ -149,18 +125,7 @@ object VNI {
                     return output.toString()
                 }
 
-                //calculate firstVowelIndex
-                var firstVowelIndex = -1
-                var vowelCount = lowercaseVowel.length
-                for ((index, ch) in output.withIndex()) {
-                    if (Common.VOWELS_WITH_DIACRITICS.contains(ch)) {
-                        firstVowelIndex = index
-                        break
-                    }
-                }
-                if (giQuCorrectionApplied) firstVowelIndex++
-
-                val toneMarkPosition = Common.getToneMarkPosition(output, firstVowelIndex, vowelCount)
+                val toneMarkPosition = Common.getToneMarkPosition(output, lowercaseInitial.length, lowercaseVowel.length)
                 output[toneMarkPosition] = tone.map[output[toneMarkPosition]] ?: output[toneMarkPosition]
 
                 return output.toString()
