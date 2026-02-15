@@ -220,7 +220,7 @@ class LibraryTest {
     }
 
     @Test fun allSyllablesTest() {
-        testCsv("all_telex_syllables.csv", Telex::telexToVietnamese)
+        testCsv("telex_all_syllables.csv", Telex::telexToVietnamese)
     }
 
     @Test fun tonesTest() {
