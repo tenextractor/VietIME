@@ -245,6 +245,9 @@ object Telex {
 
         // add tone mark
         val toneMarkPosition = Common.getToneMarkPosition(output, firstVowelIndex, vowelCount)
+        // avoid index out of bounds error
+        if (toneMarkPosition !in 0..<output.length)
+            return output.toString()
         output[toneMarkPosition] = tone.map[output[toneMarkPosition]] ?:
             output[toneMarkPosition]
 

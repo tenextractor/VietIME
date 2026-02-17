@@ -14,6 +14,7 @@ class LibraryTest {
                 output = function(item.first)
             } catch (e: Exception) {
                 exceptionMessage = e.message ?: ""
+                throw e
             }
             assertEquals(item.second, output,
                 message = "Failed test case: <${item.first}>" + if (exceptionMessage != "") ": Exception: $exceptionMessage" else ""
