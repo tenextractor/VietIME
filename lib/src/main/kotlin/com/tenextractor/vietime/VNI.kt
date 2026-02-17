@@ -29,23 +29,23 @@ object VNI {
             //if (ch.isAsciiDigit()) modifierIndices[ch.digitToInt()].add(index)
             if (ch.isLetter()) hasLetters = true
 
-                // update firstModifierIndex
-                if (ch.isDigit() && !modifierExists[ch.digitToInt()])
-                    modifierExists[ch.digitToInt()] = true
+            // update firstModifierIndex
+            if (ch.isDigit() && !modifierExists[ch.digitToInt()])
+                modifierExists[ch.digitToInt()] = true
 
-                    if (!startedVowel && Common.CONSONANTS.contains(ch)) lowercaseInitial.append(ch)
+            if (!startedVowel && Common.CONSONANTS.contains(ch)) lowercaseInitial.append(ch)
 
-                        if (!startedFinal && Common.VOWELS.contains(ch)) {
-                            if (!startedVowel) startedVowel = true
-                                lowercaseVowel.append(ch)
-                        }
+            if (!startedFinal && Common.VOWELS.contains(ch)) {
+                if (!startedVowel) startedVowel = true
+                    lowercaseVowel.append(ch)
+            }
 
-                        if (startedVowel && Common.CONSONANTS.contains(ch))
-                            startedFinal = true
+            if (startedVowel && Common.CONSONANTS.contains(ch))
+                startedFinal = true
 
-                            when (ch) {
-                                '1', '2', '3', '4', '5' -> tone = TONES[ch]!!
-                            }
+            when (ch) {
+                '1', '2', '3', '4', '5' -> tone = TONES[ch]!!
+            }
         }
 
         // apply correction to lowercaseInitial and lowercaseVowel
